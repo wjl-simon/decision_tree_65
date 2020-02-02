@@ -60,6 +60,10 @@ class DecisionTreeClassifier(object):
         #                 ** TASK 2.1: COMPLETE THIS METHOD **
         #######################################################################
         
+        # the input and output
+        #N = X.shape[0]
+        #K = X.shape[1]
+
         
         
         # set a flag so that we know that the classifier has been trained
