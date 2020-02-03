@@ -5,6 +5,7 @@
 ##############################################################################
 
 import numpy as np
+import pickle # for saving the model
 
 from classification import DecisionTreeClassifier
 from eval import Evaluator
@@ -53,8 +54,17 @@ if __name__ == "__main__":
     x, y = parseInputs("train_sub.txt")
 
     print("Training the decision tree...")
-    classifier = DecisionTreeClassifier()
-    classifier = classifier.train(x, y)
+    # classifier = DecisionTreeClassifier()
+    # #classifier = classifier.train(x, y)
+    # classifier.train(x,y)
+
+    # # save the trained model
+    # file = open("model_with_train_sub", "wb")
+    # pickle.dump(classifier, file)
+    # file.close()
+
+    # load the trained model
+    classifier = pickle.load(open("model_with_train_sub", "rb"))
 
     print("========================")
     print("Priting the decision tree...")
@@ -74,12 +84,11 @@ if __name__ == "__main__":
     x_test, y_test = parseInputs("test.txt")
     
     print("======================")
-    print("Actual:")
-    print(y_test)
+    print("Actual:\n {}".format(y_test))
 
     predictions = classifier.predict(x_test)
     print("======================")
-    print("Predictions: {}".format(predictions))
+    print("Predictions:\n {}".format(predictions))
     
     # classes = ["A", "C"];
     

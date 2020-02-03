@@ -8,66 +8,7 @@
 ##############################################################################
 
 import numpy as np
-
-class Node:
-    ''' Nodes in the decision tree
-    '''
-
-    def __init__(self, feature = None, threshold = None, true_branch = \
-                None, false_branch = None, prediction = None):
-    # @isLeafNode: True if this node is a leaf node
-    # @feature: the i-th feature, the column number of the training set
-    # @threshold: for the decision
-    # @true_branch, false_branch: the two child nodes.
-    # @prediction: for the leaf node, the class label of the majority
-    # leftover examples
-    
-        if prediction != None: # a leaf node
-            self.isLeafNode = True
-            self.feature = None
-            self.threshold = None
-            self.true_branch = None
-            self.false_branch = None
-            self.prediction = prediction  # always predict one class
-        else: # a decision node
-            self.isLeafNode = False
-            self.feature = feature
-            self.threshold = threshold
-            self.true_branch = true_branch
-            self.false_branch = false_branch
-            self.prediction = None
-    
-    # method in the decision nodes, to decide an example if it belongs
-    # to postive set or negative set
-    def decide(self, example):
-        # Compare the feature value in an example to the feature value 
-        # in this rule.
-        if self.isLeafNode:
-            return self.prediction
-
-        val = example[self.feature]
-        return val >= self.threshold
-        # if is_numeric(val):
-        #     return val >= self.threshold
-        # else:
-        #     return val == self.threshold
-
-    # adding two children nodes
-    def addChild(self,true_branch = None,false_branch = None):
-        self.true_branch = true_branch
-        self.false_branch = false_branch
-
-    def __repr__(self):
-        # to print the rule in the decision tree
-
-        if not self.isLeafNode: # a decision node
-            # condition = "=="
-            # if is_numeric(self.threshold):
-            #     condition = ">"
-            return "Is %s %s %s?" % (
-                "feature"+str(self.feature), ">", str(self.threshold))
-        else:   # a leaf node
-            return "Leaf %s." % (str(self.prediction))
+from node import Node
 
 
 class DecisionTreeClassifier(object):
@@ -91,7 +32,7 @@ class DecisionTreeClassifier(object):
     def __init__(self):
         self.is_trained = False
         self.model = None
-    
+
 
 
     def __splitDataSet(self, X, Y, node):
@@ -122,6 +63,7 @@ class DecisionTreeClassifier(object):
         return pos_X, pos_Y, neg_X, neg_Y
     
 
+
     # the key for the list.sort() method
     def __sort_key(self,e):
         return e[0]
@@ -149,6 +91,7 @@ class DecisionTreeClassifier(object):
         return candidates
 
     
+
     def __entropy(self,Y):
         # helper functions to compute entropy.
         # @Y: training label set
@@ -169,6 +112,7 @@ class DecisionTreeClassifier(object):
         return -1 * np.sum(temp)
 
 
+
     def __informationGain(self, child1, child2, parent_entpy):
         # helper function to compute infomation gain
         # @child1: a subset of the training set
@@ -183,6 +127,7 @@ class DecisionTreeClassifier(object):
             self.__entropy(child2)) / (size1+size2)
 
         return parent_entpy - child_entpy
+
 
 
     def __findBestNode(self,X, Y):
@@ -223,10 +168,12 @@ class DecisionTreeClassifier(object):
         return best_node
 
 
+
     def __induceDecisionTree(self,X,Y):
     # Train the decision tree model (builds the decision tree).
     # @X,Y: training set
 
+        # generate a node
         node = self.__findBestNode(X,Y)
 
         # Base case: if cannot split further or there is only one class,
@@ -251,12 +198,15 @@ class DecisionTreeClassifier(object):
         true_branch = self.__induceDecisionTree(pos_X, pos_Y)
         false_branch = self.__induceDecisionTree(neg_X, neg_Y)
 
-        # append the children
+        # node is the parent of these two branches
+        true_branch.addParent(node)
+        false_branch.addParent(node)
+
+        # node append the children
         node.addChild(true_branch = true_branch, \
             false_branch = false_branch)
 
         return node
-
 
 
 
@@ -291,6 +241,10 @@ class DecisionTreeClassifier(object):
         # the input and output
         #N = X.shape[0]
         #K = X.shape[1]
+        
+        # quit if the model has already been trained
+        if self.is_trained:
+            return self
 
         # the model has the root node
         self.model = self.__induceDecisionTree(x,y)
@@ -300,6 +254,7 @@ class DecisionTreeClassifier(object):
         
         return self
     
+
 
     def classify(self,example,node = None):
         # gives a prediction for an example using the trained model
@@ -358,5 +313,3 @@ class DecisionTreeClassifier(object):
     
         # remember to change this if you rename the variable
         return predictions
-        
-
