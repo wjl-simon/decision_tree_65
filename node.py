@@ -5,16 +5,16 @@ class Node:
     def __init__(self, feature = None, threshold = None,\
                 true_branch = None, false_branch = None, \
                 parent = None, prediction = None):
-    '''
-        @isLeafNode: True if this node is a leaf node
-        @feature: the i-th feature, the column number of the training set
-        @threshold: for the decision
-        @true_branch, false_branch: the two child nodes.
-        @parent: a reference to the parent node. The root node's parent
-        node is None
-        @prediction: for the leaf node, the class label of the majority
-        leftover examples
-    '''
+    
+    # @isLeafNode: True if this node is a leaf node
+    # @feature: the i-th feature, the column number of the training set
+    # @threshold: for the decision
+    # @true_branch, false_branch: the two child nodes.
+    # @parent: a reference to the parent node. The root node's parent
+    # node is None
+    # @prediction: for the leaf node, the class label of the majority
+    # leftover examples
+
         if prediction != None: # a leaf node
             self.isLeafNode = True
             self.feature = None
@@ -35,12 +35,11 @@ class Node:
 
     
     def decide(self, example):
-        '''
-        method in the decision nodes, to decide an example if it belongs
-        to postive set or negative set
+        # method in the decision nodes, to decide an example if it belongs
+        # to postive set or negative set
 
-        @example: an example (feature vector) of the training set
-        '''
+        # @example: an example (feature vector) of the training set
+    
         # Compare the feature value in an example to the feature value 
         # in this rule.
         if self.isLeafNode:

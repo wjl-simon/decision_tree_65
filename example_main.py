@@ -32,8 +32,8 @@ def parseInputs(fname):
     # https://stackoverflow.com/questions/10346336/list-of-lists-into-numpy-array?rq=1
     numpyNumArray = np.array([np.asarray(xi) for xi in numArray])
     numpyCharArray = np.array(charArray)
-    print(numpyNumArray)
-    print(numpyCharArray)
+    # print(numpyNumArray)
+    # print(numpyCharArray)
 
     return numpyNumArray, numpyCharArray
 
