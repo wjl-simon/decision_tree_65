@@ -45,15 +45,25 @@ class Evaluator(object):
         
         if not class_labels:
             class_labels = np.unique(annotation)
-        
-        confusion = np.zeros((len(class_labels), len(class_labels)), dtype=np.int)
+
+        #transfer the label of "A"-"Z" to "0"-"25"
+        prediction = [ ord(x)-65 for x in prediction ]
+        annotation = [ ord(x)-65 for x in annotation ]
+        print(prediction)
+        print(annotation)
+       
+        size=len(class_labels)
+        #initialize the confusion                        
+        confusion = np.zeros((size,size), dtype=np.int)
         
         
         #######################################################################
         #                 ** TASK 3.1: COMPLETE THIS METHOD **
         #######################################################################
-        
-        
+        for i in range(max(len(prediction),len(annotation))):
+                    confusion[annotation[i]][prediction[i]]+=1
+                                
+            
         return confusion
     
     
@@ -78,7 +88,20 @@ class Evaluator(object):
         #######################################################################
         #                 ** TASK 3.2: COMPLETE THIS METHOD **
         #######################################################################
-        
+
+        length=confusion.shape[0]
+        sum_all=0
+        accuracy_sum=0.0
+             
+        for i in range(length):
+            for j in range(length):
+        # accumulate the diagonol values as sum of accurate predictions
+                sum_all+=confusion[i][j]
+                if i==j:
+                    accuracy_sum += confusion[i][i]
+    
+        accuracy=accuracy_sum/sum_all
+
         return accuracy
         
     
@@ -104,13 +127,25 @@ class Evaluator(object):
         
         # Initialise array to store precision for C classes
         p = np.zeros((len(confusion), ))
-        
+     
         #######################################################################
         #                 ** TASK 3.3: COMPLETE THIS METHOD **
         #######################################################################
 
-        # You will also need to change this        
+        # You will also need to change this
         macro_p = 0
+        sum_precision=0
+        
+        for c in range(len(p)):
+            TP=confusion[c][c]
+            sum_positive=0.0
+            for r in range(len(p)):
+                sum_positive+=confusion[r][c]
+            p[c]=TP/sum_positive
+            sum_precision+=p[c]
+                
+        macro_p=sum_precision/len(p)
+                                                                                        
 
         return (p, macro_p)
     
@@ -145,7 +180,19 @@ class Evaluator(object):
         
         # You will also need to change this        
         macro_r = 0
-        
+        sum_recall=0.0
+        for row in range(len(r)):
+            TP=confusion[row][row]
+            sum_row=0.0
+            
+            for column in range(len(r)):
+                sum_row+=confusion[row][column]
+
+            r[row]=TP/sum_row
+            sum_recall+=r[row]
+                
+        macro_r=sum_recall/len(r)
+                                                                                                        
         return (r, macro_r)
     
     
@@ -176,9 +223,18 @@ class Evaluator(object):
         #######################################################################
         #                 ** YOUR TASK: COMPLETE THIS METHOD **
         #######################################################################
-        
-        # You will also need to change this        
+        p=self.precision(confusion)
+        r=self.recall(confusion)
         macro_f = 0
+        sum_f=0.0
+        length=len(f)
+        
+        for i in range(length):
+            f[i]=2*(p[0][i]*r[0][i])/(p[0][i]+r[0][i])
+            sum_f+=f[i]                
+        
+
+        macro_f=sum_f/length
         
         return (f, macro_f)
    
