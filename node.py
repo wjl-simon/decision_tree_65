@@ -1,3 +1,9 @@
+##############################################################################
+# CO395: Introduction to Machine Learning
+# Coursework 1 nodes for the decision tree
+# Prepared by: Wenjun Li
+##############################################################################
+
 class Node:
     ''' Nodes in the decision tree
     '''
@@ -57,14 +63,14 @@ class Node:
     def addChild(self,true_branch = None, false_branch = None):
     # adding two children nodes
     # @true_branch, false_branch: the two children of this node
-    
+
         self.true_branch = true_branch
         self.false_branch = false_branch
     
 
-
-    # remove children
+    
     def removeChild(self):
+    # remove children
         assert self.isLeafNode == False and self.true_branch != None and\
                 self.false_branch != None,\
                  "The children of a node must be both non-None."
@@ -75,19 +81,16 @@ class Node:
         self.false_branch = None
 
 
-
-    # adding a reference to this node's parent
+   
     def addParent(self, parent):
+    # adding a reference to this node's parent
         self.parent = parent
 
 
-
-    # to print the rule in the decision tree
+    
     def __repr__(self):
+    # used when printing the rule of this node
         if not self.isLeafNode: # a decision node
-            # condition = "=="
-            # if is_numeric(self.threshold):
-            #     condition = ">"
             return "Is %s %s %s?" % (
                 "feature"+str(self.feature), ">", str(self.threshold))
         else:   # a leaf node

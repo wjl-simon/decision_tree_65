@@ -2,7 +2,7 @@
 # CO395: Introduction to Machine Learning
 # Coursework 1 Skeleton code
 # Prepared by: Josiah Wang
-#
+# Modified by: Wenjun Li
 # Your tasks: Complete the train() and predict() methods of the 
 # DecisionTreeClassifier 
 ##############################################################################
@@ -188,7 +188,7 @@ class DecisionTreeClassifier(object):
         if node == None or len(label_stat) < 2:
             majorLabel = max(label_stat, key = label_stat.get)
             # the leaf node always predict the majority class
-            return Node(prediction = majorLabel)
+            return Node(prediction=majorLabel, leftover_stat=label_stat)
 
 
         # default case: spilt
