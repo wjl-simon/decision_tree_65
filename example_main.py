@@ -8,10 +8,11 @@ import numpy as np
 
 from classification import DecisionTreeClassifier
 from eval import Evaluator
+from print_tree import printDecisionTree
 
 def parseInputs(fname):
-    #filename = "F:\\PG CS Study\\IntroToML\\cw\\decision_trees_65\\data\\" + fname
-    filename = os.getcwd() + '/data/' + fname
+    filename = "F:\\PG CS Study\\IntroToML\\cw\\decision_trees_65\\data\\" + fname
+    # filename = os.getcwd() + '/data/' + fname
     f = open (filename, 'r')
     line = f.readline()
     numArray = []
@@ -55,6 +56,11 @@ if __name__ == "__main__":
     classifier = DecisionTreeClassifier()
     classifier = classifier.train(x, y)
 
+    print("========================")
+    print("Priting the decision tree...")
+    printDecisionTree(classifier.model)
+    print("========================")
+
     print("Loading the test set...")
     
     # x_test = np.array([
@@ -67,9 +73,12 @@ if __name__ == "__main__":
     # y_test = np.array(["A", "A", "C", "C"])
     x_test, y_test = parseInputs("test.txt")
     
-    # print(y_test)
+    print("======================")
+    print("Actual:")
+    print(y_test)
 
     predictions = classifier.predict(x_test)
+    print("======================")
     print("Predictions: {}".format(predictions))
     
     # classes = ["A", "C"];

@@ -65,9 +65,9 @@ class Node:
             # if is_numeric(self.threshold):
             #     condition = ">"
             return "Is %s %s %s?" % (
-                header[self.feature], ">", str(self.threshold))
+                "feature"+str(self.feature), ">", str(self.threshold))
         else:   # a leaf node
-            return "Predict %s." % (str(self.prediction))
+            return "Leaf %s." % (str(self.prediction))
 
 
 class DecisionTreeClassifier(object):
