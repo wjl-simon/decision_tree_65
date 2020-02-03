@@ -10,6 +10,7 @@ import pickle # for saving the model
 from classification import DecisionTreeClassifier
 from eval import Evaluator
 from print_tree import printDecisionTree
+from prune import *
 
 def parseInputs(fname):
     filename = "F:\\PG CS Study\\IntroToML\\cw\\decision_trees_65\\data\\" + fname
@@ -51,20 +52,27 @@ if __name__ == "__main__":
     
     # y = np.array(["A", "A", "A", "C", "C", "C"])
     
-    x, y = parseInputs("train_sub.txt")
+    x, y = parseInputs("train_full.txt")
 
     print("Training the decision tree...")
-    # classifier = DecisionTreeClassifier()
-    # #classifier = classifier.train(x, y)
-    # classifier.train(x,y)
+    classifier = DecisionTreeClassifier()
+    #classifier = classifier.train(x, y)
+    classifier.train(x,y)
 
-    # # save the trained model
-    # file = open("model_with_train_sub", "wb")
-    # pickle.dump(classifier, file)
-    # file.close()
+    # save the trained model
+    print("========================")
+    print("Training finished. Saving the model...")
+    file = open("model_with_train_full", "wb")
+    pickle.dump(classifier, file)
+    file.close()
+    print("========================")
 
-    # load the trained model
-    classifier = pickle.load(open("model_with_train_sub", "rb"))
+    # load the saved trained model
+    # print("========================")
+    # print("Loding the saved model...")
+    # classifier = pickle.load(open("model_with_train_sub", "rb"))
+    # classifier = pickle.load(open("model_with_train_full", "rb"))
+    # print("========================")
 
     print("========================")
     print("Priting the decision tree...")

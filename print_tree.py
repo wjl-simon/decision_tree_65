@@ -1,5 +1,6 @@
 from classification import Node
 
+
 def printDecisionTree(node, spacing="|", depth = 0):
     # base case 1: reaches the max recursion depth
     if depth > 4:

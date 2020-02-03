@@ -93,8 +93,8 @@ class DecisionTreeClassifier(object):
     
 
     def __entropy(self,Y):
-        # helper functions to compute entropy.
-        # @Y: training label set
+    # helper functions to compute entropy.
+    # @Y: training label set
 
         # statistics for each label (class)
         label_stat = {}  # a dictionary of label -> count.
@@ -114,11 +114,11 @@ class DecisionTreeClassifier(object):
 
 
     def __informationGain(self, child1, child2, parent_entpy):
-        # helper function to compute infomation gain
-        # @child1: a subset of the training set
-        # @child2: another subset of the training set, where child1
-        # + child2 = parent training set
-        # parent_entpy: the entropy of the parent data set
+    # helper function to compute infomation gain
+    # @child1: a subset of the training set
+    # @child2: another subset of the training set, where child1
+    # + child2 = parent training set
+    # parent_entpy: the entropy of the parent data set
 
         size1 = len(child1)
         size2 = len(child2)
@@ -257,7 +257,7 @@ class DecisionTreeClassifier(object):
 
 
     def classify(self,example,node = None):
-        # gives a prediction for an example using the trained model
+    # gives a prediction for an example using the trained model
         if not self.is_trained:
             raise Exception("Decision Tree classifier has not yet been trained.")
         

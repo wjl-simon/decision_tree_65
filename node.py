@@ -4,8 +4,8 @@ class Node:
 
     def __init__(self, feature = None, threshold = None,\
                 true_branch = None, false_branch = None, \
-                parent = None, prediction = None):
-    
+                parent = None, prediction = None,\
+                leftover_stat = None):
     # @isLeafNode: True if this node is a leaf node
     # @feature: the i-th feature, the column number of the training set
     # @threshold: for the decision
@@ -14,6 +14,9 @@ class Node:
     # node is None
     # @prediction: for the leaf node, the class label of the majority
     # leftover examples
+    # @leftover_stat: a python dictionary for a leaf node, gives the 
+    # statistics of the leftover dataset. e.g. {'class A': 500, 
+    # 'class B': 600}, while the prediction is 'class B'.
 
         if prediction != None: # a leaf node
             self.isLeafNode = True
@@ -23,6 +26,7 @@ class Node:
             self.false_branch = None
             self.parent = None
             self.prediction = prediction  # always predict one class
+            self.leftover_stat = leftover_stat
         else: # a decision node
             self.isLeafNode = False
             self.feature = feature
@@ -31,14 +35,14 @@ class Node:
             self.false_branch = false_branch
             self.parent = parent
             self.prediction = None
+            self.leftover_stat = None
     
 
     
     def decide(self, example):
-        # method in the decision nodes, to decide an example if it belongs
-        # to postive set or negative set
-
-        # @example: an example (feature vector) of the training set
+    # method in the decision nodes, to decide an example if it belongs
+    # to postive set or negative set
+    # @example: an example (feature vector) of the training set
     
         # Compare the feature value in an example to the feature value 
         # in this rule.
@@ -47,17 +51,29 @@ class Node:
 
         val = example[self.feature]
         return val >= self.threshold
-        # if is_numeric(val):
-        #     return val >= self.threshold
-        # else:
-        #     return val == self.threshold
 
 
+    
+    def addChild(self,true_branch = None, false_branch = None):
     # adding two children nodes
-    def addChild(self,true_branch = None,false_branch = None):
+    # @true_branch, false_branch: the two children of this node
+    
         self.true_branch = true_branch
         self.false_branch = false_branch
     
+
+
+    # remove children
+    def removeChild(self):
+        assert self.isLeafNode == False and self.true_branch != None and\
+                self.false_branch != None,\
+                 "The children of a node must be both non-None."
+
+        del self.true_branch
+        del self.false_branch
+        self.true_branch = None
+        self.false_branch = None
+
 
 
     # adding a reference to this node's parent
