@@ -5,16 +5,17 @@
 ##############################################################################
 
 import numpy as np
+import os
 import pickle # for saving the model
 
 from classification import DecisionTreeClassifier
 from eval import Evaluator
 from print_tree import printDecisionTree
-from prune import *
+# from prune import *
 
 def parseInputs(fname):
     filename = "F:\\PG CS Study\\IntroToML\\cw\\decision_trees_65\\data\\" + fname
-    # filename = os.getcwd() + '/data/' + fname
+    # filename = os.getcwd() + '//data//' + fname
     f = open (filename, 'r')
     line = f.readline()
     numArray = []
@@ -40,7 +41,7 @@ def parseInputs(fname):
 
 
 if __name__ == "__main__":
-    print("Loading the training dataset...");
+    print("Loading the training dataset...")
     # x = np.array([
     #         [5,7,1],
     #         [4,6,2],
@@ -52,26 +53,26 @@ if __name__ == "__main__":
     
     # y = np.array(["A", "A", "A", "C", "C", "C"])
     
-    x, y = parseInputs("train_full.txt")
+    x, y = parseInputs("train_sub.txt")
 
     print("Training the decision tree...")
     classifier = DecisionTreeClassifier()
-    #classifier = classifier.train(x, y)
     classifier.train(x,y)
 
     # save the trained model
     print("========================")
     print("Training finished. Saving the model...")
-    file = open("model_with_train_full", "wb")
+    file = open("model_with_train_sub", "wb")
     pickle.dump(classifier, file)
     file.close()
     print("========================")
 
-    # load the saved trained model
+    # # load the saved trained model
     # print("========================")
     # print("Loding the saved model...")
     # classifier = pickle.load(open("model_with_train_sub", "rb"))
     # classifier = pickle.load(open("model_with_train_full", "rb"))
+    # print("Loding finished.")
     # print("========================")
 
     print("========================")
