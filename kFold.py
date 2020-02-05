@@ -239,7 +239,7 @@ def mostAccurateClassifier(accuracyList):
 
 def outputCompared(input1, input2):
     if input1 == input2:
-        return " the same "
+        return " the same as"
     if input1 > input2:
         return " better than "
     if input1 < input2:
@@ -270,14 +270,14 @@ fullSetEvaluate = Evaluator()
 fullSetConfusion = fullSetEvaluate.confusion_matrix(fullSetPrediction, testAnnotation)
 fullSetAccuracy = fullSetEvaluate.accuracy(fullSetConfusion)
 print("Accuracy of full set training is: " + str(fullSetAccuracy))
-print( "The accuracy of the most accurate model is"+ outputCompared(mostAccAccuracy, fullSetAccuracy) + "as training on the full dataset.")
+print( "The accuracy of the most accurate model is"+ outputCompared(mostAccAccuracy, fullSetAccuracy) + "training on the full dataset.")
 print("============QUESTION 3============")
 modalAnswer = classifierPredictionsCombined(classifierList, testInput, testAnnotation)
 modalEvaluate = Evaluator()
 modalConfusion = modalEvaluate.confusion_matrix(modalAnswer, testAnnotation)
 modalAccuracy = modalEvaluate.accuracy(modalConfusion)
 print("The accuracy of the combined predictions is: {}".format(modalAccuracy))
-print( "The accuracy of modal prediction is"+ outputCompared(modalAccuracy, fullSetAccuracy) + "as training on the full dataset.")
+print( "The accuracy of modal prediction is"+ outputCompared(modalAccuracy, fullSetAccuracy) + "training on the full dataset.")
 
 # annotation = np.array([0,1,2,3,4,5,6,7,8,9])
 # input = np.array([[0],[1],[2],[3],[4],[5],[6],[7],[8],[9]])
