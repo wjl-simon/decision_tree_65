@@ -11,37 +11,9 @@ import pickle # for saving the model
 from classification import DecisionTreeClassifier
 from eval import Evaluator
 from print_tree import printDecisionTree
-# from prune import *
-
-def parseInputs(fname):
-    filename = "//homes//xj19//decision_trees_65//data//" + fname
-    #filename = os.getcwd() + '//data//' + fname
-    f = open (filename, 'r')
-    line = f.readline()
-    numArray = []
-    charArray =[]
-    while line:
-        tempNumList = []
-        result = [x.strip() for x in line.split(',')]
-        for str in result:
-            if(str.isalpha() == True):
-                charArray.append(str)
-            if (str.isdigit() == True):
-                tempNumList.append(int(str))
-        line = f.readline()
-        numArray.append(tempNumList)
-    f.close()
-    # https://stackoverflow.com/questions/10346336/list-of-lists-into-numpy-array?rq=1
-    numpyNumArray = np.array([np.asarray(xi) for xi in numArray])
-    numpyCharArray = np.array(charArray)
-    # print(numpyNumArray)
-    # print(numpyCharArray)
-
-    return numpyNumArray, numpyCharArray
-
 from loading import * # the parseInput is here
 # from prune import * # the pruning function
-# >>>>>>> e1ee2c5e971dd59249faef517ac7b8586eea20b5
+
 
 
 if __name__ == "__main__":
@@ -57,27 +29,27 @@ if __name__ == "__main__":
 
     # y = np.array(["A", "A", "A", "C", "C", "C"])
 
-    x, y = parseInputs("toy.txt")
+    # x, y = parseInputs("train_sub.txt")
 
-    print("Training the decision tree...")
-    classifier = DecisionTreeClassifier()
-    classifier.train(x,y)
+    # print("Training the decision tree...")
+    # classifier = DecisionTreeClassifier()
+    # classifier.train(x,y)
 
-    # save the trained model
-    print("========================")
-    print("Training finished. Saving the model...")
-    file = open("model_with_train_sub", "wb")
-    pickle.dump(classifier, file)
-    file.close()
-    print("========================")
-
-    # # load the saved trained model
+    # # save the trained model
     # print("========================")
-    # print("Loding the saved model...")
-    # classifier = pickle.load(open("model_with_train_sub", "rb"))
+    # print("Training finished. Saving the model...")
+    # file = open("model_with_train_sub", "wb")
+    # pickle.dump(classifier, file)
+    # file.close()
+    # print("========================")
+
+    # load the saved trained model
+    print("========================")
+    print("Loding the saved model...")
+    classifier = pickle.load(open("model_with_train_sub", "rb"))
     # classifier = pickle.load(open("model_with_train_full", "rb"))
-    # print("Loding finished.")
-    # print("========================")
+    print("Loding finished.")
+    print("========================")
 
     print("========================")
     print("Priting the decision tree...")
@@ -94,7 +66,7 @@ if __name__ == "__main__":
     #     ])
 
     # y_test = np.array(["A", "A", "C", "C"])
-    x_test, y_test = parseInputs("simple1.txt")
+    x_test, y_test = parseInputs("test.txt")
 
     print("======================")
     print("Actual:\n {}".format(y_test))
