@@ -11,7 +11,6 @@ import pickle # for saving the model
 from classification import DecisionTreeClassifier
 from eval import Evaluator
 from print_tree import printDecisionTree
-<<<<<<< HEAD
 # from prune import *
 
 def parseInputs(fname):
@@ -39,10 +38,10 @@ def parseInputs(fname):
     # print(numpyCharArray)
 
     return numpyNumArray, numpyCharArray
-=======
+
 from loading import * # the parseInput is here
 # from prune import * # the pruning function
->>>>>>> e1ee2c5e971dd59249faef517ac7b8586eea20b5
+# >>>>>>> e1ee2c5e971dd59249faef517ac7b8586eea20b5
 
 
 if __name__ == "__main__":
@@ -50,15 +49,15 @@ if __name__ == "__main__":
     # x = np.array([
     #         [5,7,1],
     #         [4,6,2],
-    #         [4,6,3], 
-    #         [1,3,1], 
-    #         [2,1,2], 
+    #         [4,6,3],
+    #         [1,3,1],
+    #         [2,1,2],
     #         [5,2,6]
     #     ])
-    
+
     # y = np.array(["A", "A", "A", "C", "C", "C"])
-    
-    x, y = parseInputs("train_sub.txt")
+
+    x, y = parseInputs("toy.txt")
 
     print("Training the decision tree...")
     classifier = DecisionTreeClassifier()
@@ -86,31 +85,31 @@ if __name__ == "__main__":
     print("========================")
 
     print("Loading the test set...")
-    
+
     # x_test = np.array([
-    #         [1,6,3], 
-    #         [0,5,5], 
-    #         [1,5,0], 
+    #         [1,6,3],
+    #         [0,5,5],
+    #         [1,5,0],
     #         [2,4,2]
     #     ])
-    
+
     # y_test = np.array(["A", "A", "C", "C"])
-    x_test, y_test = parseInputs("test.txt")
-    
+    x_test, y_test = parseInputs("simple1.txt")
+
     print("======================")
     print("Actual:\n {}".format(y_test))
 
     predictions = classifier.predict(x_test)
     print("======================")
     print("Predictions:\n {}".format(predictions))
-    
+
     #classes = ["A", "C"];
     classes = np.unique(y_test)
-    
+
     print("Evaluating test predictions...")
     evaluator = Evaluator()
     confusion = evaluator.confusion_matrix(predictions, y_test)
-    
+
     print("Confusion matrix:")
     print("(Note:row classes-actual classes; column classes-predicted classes")
     print(confusion)
@@ -127,9 +126,8 @@ if __name__ == "__main__":
     print("Class: Precision, Recall, F1")
     for (i, (p1, r1, f1)) in enumerate(zip(p, r, f)):
         print("{}: {:.2f}, {:.2f}, {:.2f}".format(classes[i], p1, r1, f1));
-   
-    print() 
+
+    print()
     print("Macro-averaged Precision: {:.2f}".format(macro_p))
     print("Macro-averaged Recall: {:.2f}".format(macro_r))
     print("Macro-averaged F1: {:.2f}".format(macro_f))
-
