@@ -11,6 +11,7 @@ import pickle # for saving the model
 from classification import DecisionTreeClassifier
 from eval import Evaluator
 from print_tree import printDecisionTree
+<<<<<<< HEAD
 # from prune import *
 
 def parseInputs(fname):
@@ -38,6 +39,10 @@ def parseInputs(fname):
     # print(numpyCharArray)
 
     return numpyNumArray, numpyCharArray
+=======
+from loading import * # the parseInput is here
+# from prune import * # the pruning function
+>>>>>>> e1ee2c5e971dd59249faef517ac7b8586eea20b5
 
 
 if __name__ == "__main__":
