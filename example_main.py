@@ -12,7 +12,7 @@ from classification import DecisionTreeClassifier
 from eval import Evaluator
 from print_tree import printDecisionTree
 from loading import * # the parseInput is here
-from prune import pruneModel # the pruning function
+from prune import pruneModel, pruneSpecifiable # the pruning function
 import copy
 
 
@@ -111,3 +111,9 @@ if __name__ == "__main__":
     pruneModel(classifier_copy,x_test,y_test)
     print('Pruning finished. Printing the decision tree...')
     printDecisionTree(classifier_copy.model)
+    print("======================")
+    print('Pruning the decision tree using method2...')
+    classifier2 = copy.deepcopy(classifier)
+    pruneSpecifiable(classifier2,x_test,y_test)
+    print('Pruning finished. Printing the decision tree...')
+    printDecisionTree(classifier2.model)
