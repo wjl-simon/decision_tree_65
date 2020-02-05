@@ -20,14 +20,14 @@ def pruneLeaf(node):
     '''
     # base case : reaches a intermediate node where all its children
     #  are leaf nodes
-    if not node.isLeafNode and node.true_branch.isLeafNode and\
+    if not node.isLeafNode and node.true_branch.isLeafNode and \
         node.false_branch.isLeafNode:
         # get the statistics
         leftover_stat_false = node.false_branch.leftover_stat
-        # merge the stat
         stat = node.true_branch.leftover_stat.copy() # make a copy
+        # merge leftover_stat_false into the stat
         for label in leftover_stat_false:
-            if label in leftover_stat_false:
+            if label in stat:
                 # add the value to the same label
                 stat[label] += leftover_stat_false[label]
             else:
@@ -65,22 +65,23 @@ def pruneLeaf(node):
 
 
 
-def pruneModel(classifier, x, y, x_vali, y_vali,
-                acc_loss_percent = 0.15, maxStep = 5):
-    # Gives a pruned version of the decision tree
-    # 
-    # @classifer: is a DecisionTreeClassifier instance
-    # @x, y: the training set
-    # @x_valid, y_valid: the validation set
-    # @acc_loss_percent: a convergence condition, specifies the 
-    # percentage of loss of the accuracy with respect to the unpruned
-    # version. (e.g. acc_loss_percent = 0.1, the accuracy of the 
-    # unpruned model gives 80% of accuracy, when a pruned version gives
-    # an accuray of less 72% (10% loss), the function returns.
-    # @maxStep: the maximun times of doing prunning. A maxStep > the 
-    # depth will not screw up the model
+def pruneModel(classifier,x_vali, y_vali, acc_loss_percent = 0.1,\
+             maxStep = 5):
+    '''
+        Gives a pruned version of the decision tree
+        
+        @classifer: is a DecisionTreeClassifier instance
+        @x_valid, y_valid: the validation set
+        @acc_loss_percent: a convergence condition, specifies the 
+        percentage of loss of the accuracy with respect to the unpruned
+        version. (e.g. acc_loss_percent = 0.1, the accuracy of the 
+        unpruned model gives 80% of accuracy, when a pruned version gives
+        an accuray of less 72% (10% loss), the function returns.
+        @maxStep: the maximun times of doing prunning. A maxStep > the 
+        depth of the decision tree will not screw up the model.
+    '''
     assert classifier.is_trained, \
-            "Pruning failed. the classifier must be pretrained."
+        "Pruning failed. the classifier must be pretrained."
 
     evaluator = Evaluator()
     # prediction of the unpruned classifer
@@ -94,11 +95,12 @@ def pruneModel(classifier, x, y, x_vali, y_vali,
 
     # iteration: stops if there is a root node left, or converges, or
     # reaches max ite steps
-    acc_cur = original_accuracy
-    acc_next = 0
+    acc_cur = 0
+    acc_next = original_accuracy
     counter = 0
-    while math.fabs((acc_cur-acc_next)/original_accuracy) < acc_loss_percent and\
-        counter > maxStep and classifier_copy.model.parent != None:
+
+    while counter < maxStep and \
+        1 - math.fabs(acc_next/original_accuracy) < acc_loss_percent:
         # update
         acc_cur = acc_next
         counter += 1
@@ -110,7 +112,7 @@ def pruneModel(classifier, x, y, x_vali, y_vali,
         acc_next = evaluator.accuracy(conf)
         
     
-    print('After %d steps, the final pruned model has an accuracy of: '\
-         + str(acc_cur), counter)
+    print('After {0:d} steps, the final pruned model has an accuracy \
+        of: {a}'.format(counter,a=acc_cur))
     return classifier_copy
 

@@ -5,14 +5,14 @@
 ##############################################################################
 
 import numpy as np
-import os
+#import os
 import pickle # for saving the model
 
 from classification import DecisionTreeClassifier
 from eval import Evaluator
 from print_tree import printDecisionTree
 from loading import * # the parseInput is here
-# from prune import * # the pruning function
+from prune import pruneModel # the pruning function
 
 
 
@@ -77,7 +77,7 @@ if __name__ == "__main__":
 
     #classes = ["A", "C"];
     classes = np.unique(y_test)
-
+    print("======================")
     print("Evaluating test predictions...")
     evaluator = Evaluator()
     confusion = evaluator.confusion_matrix(predictions, y_test)
@@ -97,9 +97,15 @@ if __name__ == "__main__":
     print()
     print("Class: Precision, Recall, F1")
     for (i, (p1, r1, f1)) in enumerate(zip(p, r, f)):
-        print("{}: {:.2f}, {:.2f}, {:.2f}".format(classes[i], p1, r1, f1));
+        print("{}: {:.2f}, {:.2f}, {:.2f}".format(classes[i], p1, r1, f1))
 
     print()
     print("Macro-averaged Precision: {:.2f}".format(macro_p))
     print("Macro-averaged Recall: {:.2f}".format(macro_r))
     print("Macro-averaged F1: {:.2f}".format(macro_f))
+
+    print("======================")
+    print('Pruning the decision tree...')
+    prunedModel = pruneModel(classifier,x_test,y_test)
+    print('Pruning finished. Printing the decision tree...')
+    printDecisionTree(prunedModel.model)

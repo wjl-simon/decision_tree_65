@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 def parseInputs(fname):
     filename = "F:\\PG CS Study\\IntroToML\\cw\\decision_trees_65\\data\\" + fname
