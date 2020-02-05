@@ -13,6 +13,7 @@ from eval import Evaluator
 from print_tree import printDecisionTree
 from loading import * # the parseInput is here
 from prune import pruneModel # the pruning function
+import copy
 
 
 
@@ -106,6 +107,7 @@ if __name__ == "__main__":
 
     print("======================")
     print('Pruning the decision tree...')
-    prunedModel = pruneModel(classifier,x_test,y_test)
+    classifier_copy = copy.deepcopy(classifier)
+    pruneModel(classifier_copy,x_test,y_test)
     print('Pruning finished. Printing the decision tree...')
-    printDecisionTree(prunedModel.model)
+    printDecisionTree(classifier_copy.model)

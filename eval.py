@@ -51,8 +51,8 @@ class Evaluator(object):
         #transfer to label index
         prediction = [class_labels.index(x) for x in prediction]
         annotation = [class_labels.index(x) for x in annotation]
-        print(prediction)
-        print(annotation)
+        # print(prediction)
+        # print(annotation)
        
         size=len(class_labels)
       
