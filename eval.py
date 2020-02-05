@@ -44,8 +44,8 @@ class Evaluator(object):
         """
         
         if not class_labels:
-            class_labels = list(set(prediction.tolist()))
-            class_labels.sort(key=prediction.tolist().index)
+            class_labels = list(set(annotation.tolist()))
+            class_labels.sort()
             #print(class_labels)
                                     
         #transfer to label index
@@ -100,8 +100,9 @@ class Evaluator(object):
                 sum_all+=confusion[i][j]
                 if i==j:
                     accuracy_sum += confusion[i][i]
-    
-        accuracy=accuracy_sum/sum_all
+
+        if sum_all!=0:
+            accuracy=accuracy_sum/sum_all
 
         return accuracy
         
@@ -142,8 +143,9 @@ class Evaluator(object):
             sum_positive=0.0
             for r in range(len(p)):
                 sum_positive+=confusion[r][c]
-            p[c]=TP/sum_positive
-            sum_precision+=p[c]
+            if sum_positive!=0:
+                p[c]=TP/sum_positive
+                sum_precision+=p[c]
                 
         macro_p=sum_precision/len(p)
                                                                                         
@@ -189,8 +191,9 @@ class Evaluator(object):
             for column in range(len(r)):
                 sum_row+=confusion[row][column]
 
-            r[row]=TP/sum_row
-            sum_recall+=r[row]
+            if sum_row!=0:
+                r[row]=TP/sum_row
+                sum_recall+=r[row]
                 
         macro_r=sum_recall/len(r)
                                                                                                         
@@ -231,8 +234,9 @@ class Evaluator(object):
         length=len(confusion)
         
         for i in range(length):
-            f[i]=2*(p[0][i]*r[0][i])/(p[0][i]+r[0][i])
-            sum_f+=f[i]                
+            if p[0][i]+r[0][i]!=0:
+                f[i]=2*(p[0][i]*r[0][i])/(p[0][i]+r[0][i])
+                sum_f+=f[i]                
         
 
         macro_f=sum_f/length
