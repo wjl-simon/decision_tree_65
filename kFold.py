@@ -92,8 +92,8 @@ def k_fold_cross_models(setData, foldCount, numberOfEntries):
     # foldCounter = math.ceil((numberOfEntries)/foldCount)
     classifierList = []
     predictionList = []
-    # for foldIterator in range(foldCount):
-    for foldIterator in range(0,1):
+    for foldIterator in range(foldCount):
+    # for foldIterator in range(0,1):
         print("======================")
         print("Model " + str(foldIterator) + " training. ")
         if (foldIterator + 1) >= (foldCount):
@@ -152,6 +152,7 @@ def classifierMetrics(classifierList, foldCount, testInput, testAnnotation):
     totalAccuracy = calculateTotalAccuracy(accuracyList, foldCount)
     standardDeviation = calculateSD(accuracyList, totalAccuracy, foldCount)
     mostAccIndex = accuracyList.index(max(accuracyList))
+    return accuracyList
 
 
 def calculateAllAccuracy(classifierList, testInput, testAnnotation):
@@ -175,7 +176,8 @@ def calculateAllAccuracy(classifierList, testInput, testAnnotation):
 def calculateTotalAccuracy(accuracyList, foldCount):
     totalAccuracy = 0.0
     listIter = 0
-    # print(accuracyList)
+    print("The list of accuracies of the different models are as below: ")
+    print(accuracyList)
     for accuracy in accuracyList:
         # print(accuracy)
         totalAccuracy += accuracy
@@ -219,7 +221,7 @@ def modalAnswer(inputs):
         modalAnswer = modalCharacter(inputs[:, iterator])
         modalAnswerList.extend(modalAnswer)
     modalAnswer = np.array(modalAnswerList)
-    print(modalAnswer.shape)
+    # print(modalAnswer.shape)
     return np.array(modalAnswer)
 
 def modalCharacter(input):
@@ -228,19 +230,54 @@ def modalCharacter(input):
     return output[0]
 
 
-trainInput, trainAnnotation = loading.parseInputs("train_full.txt")
+def mostAccurateClassifier(accuracyList):
+    maxAccuracy = 0.0
+    for accuracy in accuracyList:
+        if accuracy > maxAccuracy:
+            maxAccuracy = accuracy
+    return accuracyList.index(maxAccuracy)
+
+def outputCompared(input1, input2):
+    if input1 == input2:
+        return " the same "
+    if input1 > input2:
+        return " better than "
+    if input1 < input2:
+        return " worse than "
+
+trainInput, trainAnnotation = loading.parseInputs("simple3.txt")
 foldNumber = 10
 setData = k_fold_cross_split(trainInput,trainAnnotation,foldNumber)
 # print(setData)
 # print("size of array is: " + str(np.size(y)))
 classifierList = k_fold_cross_models(setData, foldNumber, np.size(trainAnnotation))
-testInput, testAnnotation = loading.parseInputs("tests.txt")
-classifierMetrics(classifierList, foldNumber, testInput, testAnnotation)
+testInput, testAnnotation = loading.parseInputs("simple4.txt")
+print("============QUESTION 1============")
+accuracyList = classifierMetrics(classifierList, foldNumber, testInput, testAnnotation)
+print("============QUESTION 2============")
+indexOfMostAccClassifier = mostAccurateClassifier(accuracyList)
+print("The index of most accurate classifier is: " + str(indexOfMostAccClassifier))
+mostAccClassifier = classifierList[indexOfMostAccClassifier]
+mostAccEvaluate = Evaluator()
+mostAccPredictions = mostAccClassifier.predict(testInput)
+mostAccConfusion = mostAccEvaluate.confusion_matrix(mostAccPredictions, testAnnotation)
+mostAccAccuracy = mostAccEvaluate.accuracy(mostAccConfusion)
+print("Accuracy of most accurate model is: " + str(mostAccAccuracy))
+fullSetClassifier = classification.DecisionTreeClassifier()
+fullSetClassifier = fullSetClassifier.train(trainInput, trainAnnotation)
+fullSetPrediction = fullSetClassifier.predict(testInput)
+fullSetEvaluate = Evaluator()
+fullSetConfusion = fullSetEvaluate.confusion_matrix(fullSetPrediction, testAnnotation)
+fullSetAccuracy = fullSetEvaluate.accuracy(fullSetConfusion)
+print("Accuracy of full set training is: " + str(fullSetAccuracy))
+print( "The accuracy of the most accurate model is"+ outputCompared(mostAccAccuracy, fullSetAccuracy) + "as training on the full dataset.")
+print("============QUESTION 3============")
 modalAnswer = classifierPredictionsCombined(classifierList, testInput, testAnnotation)
-evaluate = Evaluator()
-confusion = evaluate.confusion_matrix(modalAnswer, testAnnotation)
-accuracy = evaluate.accuracy(confusion)
-print("The accuracy of the combined predictions is: {}".format(accuracy))
+modalEvaluate = Evaluator()
+modalConfusion = modalEvaluate.confusion_matrix(modalAnswer, testAnnotation)
+modalAccuracy = modalEvaluate.accuracy(modalConfusion)
+print("The accuracy of the combined predictions is: {}".format(modalAccuracy))
+print( "The accuracy of modal prediction is"+ outputCompared(modalAccuracy, fullSetAccuracy) + "as training on the full dataset.")
 
 # annotation = np.array([0,1,2,3,4,5,6,7,8,9])
 # input = np.array([[0],[1],[2],[3],[4],[5],[6],[7],[8],[9]])
