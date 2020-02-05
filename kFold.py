@@ -1,10 +1,12 @@
 import classification
-import eval as ev
+from eval import Evaluator
 import numpy as np
 import math
+import loading
 from print_tree import printDecisionTree
 import example_main
 import sys
+from collections import Counter
 
 np.set_printoptions(threshold=sys.maxsize)
 
@@ -73,7 +75,7 @@ def k_fold_cross_models(setData, foldCount, numberOfEntries):
     # print("set data: ")
     # print(setData[0])
     # print(setData[1])
-    testInput, testAnnotation = example_main.parseInputs("test.txt")
+    # testInput, testAnnotation = loading.parseInputs("simple1.txt")
     # print("test txt input")
     # print(testInput)
     # print("test txt output")
@@ -90,7 +92,8 @@ def k_fold_cross_models(setData, foldCount, numberOfEntries):
     # foldCounter = math.ceil((numberOfEntries)/foldCount)
     classifierList = []
     predictionList = []
-    for foldIterator in range(foldCount):
+    # for foldIterator in range(foldCount):
+    for foldIterator in range(0,1):
         print("======================")
         print("Model " + str(foldIterator) + " training. ")
         if (foldIterator + 1) >= (foldCount):
@@ -147,7 +150,7 @@ def k_fold_cross_models(setData, foldCount, numberOfEntries):
 def classifierMetrics(classifierList, foldCount, testInput, testAnnotation):
     accuracyList = calculateAllAccuracy(classifierList, testInput, testAnnotation)
     totalAccuracy = calculateTotalAccuracy(accuracyList, foldCount)
-    standardDeviation = calculateSD(classifierList)
+    standardDeviation = calculateSD(accuracyList, totalAccuracy, foldCount)
     mostAccIndex = accuracyList.index(max(accuracyList))
 
 
@@ -158,31 +161,36 @@ def calculateAllAccuracy(classifierList, testInput, testAnnotation):
     for DecisionTreeClassifier in classifierList:
         classifier = DecisionTreeClassifier
         predictions = classifier.predict(testInput)
-        evaluate = ev.Evaluator()
-        print("these are my predictions.")
-        print(predictions)
-        print("these are my annotations.")
-        print(testAnnotation)
-        evaluate.confusion_matrix(predictions, testAnnotation)
-        accuracy = evaluator.accuracy(confusion)
-        print("Accuracy: {}".format(accuracy))
-        totalAccuracy += accuracy
-        accuracyList.extend(accuracy)
+        evaluate = Evaluator()
+        # print("these are my predictions.")
+        # print(predictions)
+        # print("these are my annotations.")
+        # print(testAnnotation)
+        confusion = evaluate.confusion_matrix(predictions, testAnnotation)
+        accuracy = evaluate.accuracy(confusion)
+        # print("Accuracy: {}".format(accuracy))
+        accuracyList.append(accuracy)
     return accuracyList
 
 def calculateTotalAccuracy(accuracyList, foldCount):
-    totalAccuracy = 0
-    for listiter in accuracyList:
-        totalAccuracy += accuracyList[listIter]
+    totalAccuracy = 0.0
+    listIter = 0
+    # print(accuracyList)
+    for accuracy in accuracyList:
+        # print(accuracy)
+        totalAccuracy += accuracy
+        # np.add(totalAccuracy, accuracyList[listIter])
     totalAccuracy /= foldCount
     print("The average accuracy is " + str(totalAccuracy))
+    return totalAccuracy
 
-def calculateSD(accuracyList):
-    for iterator in range(accuracyList):
-        average = accuracyList[iterator]
-        intermediateStep += (average - totalAccuracy) ** 2
-    intermediateStep /= foldCount
-    stdDeviation = math.sqrt(intermediateStep)
+def calculateSD(accuracyList, totalAccuracy, foldCount):
+    sumDiffSquare = 0.0
+    for accuracy in accuracyList:
+        average = accuracy
+        sumDiffSquare += (average - totalAccuracy) ** 2
+    variance = sumDiffSquare/foldCount
+    stdDeviation = math.sqrt(variance)
     print("The standard deviation is: " + str(stdDeviation))
     return stdDeviation
 
@@ -198,39 +206,42 @@ def classifierPredictionsCombined(classifierList, testInput, testAnnotation):
     # print(numpyPredictions.shape)
     # print("test annotation: " + str(np.size(testAnnotation)))
     # print(testAnnotation)
-    modalAnswer(numpyPredictions)
+    return modalAnswer(numpyPredictions)
 
 # GET THE MODAL INPUT ASAP.
 def modalAnswer(inputs):
-    print(inputs)
-    print(inputs.shape)
-    iterator = 0
-    # THIS NEEDS TO BE 200 DIFFERENT OUTPUTS, THEN CHOOSE THE MOST POPULAR ONE.
-    firstColumn = 0
-    count = 0
-    for firstColumn in inputs:
-        for row in inputs:
-            allAnswersInCol = inputs[:,iterator]
-    #         iterator += 1
-            print(allAnswersInCol)
-            count += 1
-    print("this is the count: " + str(count))
-    #         print("iterator " + str(iterator))
-    # for row in outputs
-    #     modalList =
+    # print(inputs)
+    dimension = inputs.shape
+    rowNumber = dimension[1]
+    modalAnswerList = []
+    for iterator in range(0,rowNumber):
+        # print(inputs[:, iterator])
+        modalAnswer = modalCharacter(inputs[:, iterator])
+        modalAnswerList.extend(modalAnswer)
+    modalAnswer = np.array(modalAnswerList)
+    print(modalAnswer.shape)
+    return np.array(modalAnswer)
 
-def returnList(input):
-    return input
+def modalCharacter(input):
+    # https://stackoverflow.com/questions/10797819/finding-the-mode-of-a-list
+    output = (Counter(input).most_common(1))[0]
+    return output[0]
 
-x, y = example_main.parseInputs("train_full.txt")
+
+trainInput, trainAnnotation = loading.parseInputs("train_full.txt")
 foldNumber = 10
-setData = k_fold_cross_split(x,y,foldNumber)
+setData = k_fold_cross_split(trainInput,trainAnnotation,foldNumber)
 # print(setData)
 # print("size of array is: " + str(np.size(y)))
-classifierList = k_fold_cross_models(setData, foldNumber, np.size(y))
-testInput, testAnnotation = example_main.parseInputs("test.txt")
+classifierList = k_fold_cross_models(setData, foldNumber, np.size(trainAnnotation))
+testInput, testAnnotation = loading.parseInputs("tests.txt")
 classifierMetrics(classifierList, foldNumber, testInput, testAnnotation)
-classifierPredictionsCombined(classifierList, testInput, testAnnotation)
+modalAnswer = classifierPredictionsCombined(classifierList, testInput, testAnnotation)
+evaluate = Evaluator()
+confusion = evaluate.confusion_matrix(modalAnswer, testAnnotation)
+accuracy = evaluate.accuracy(confusion)
+print("The accuracy of the combined predictions is: {}".format(accuracy))
+
 # annotation = np.array([0,1,2,3,4,5,6,7,8,9])
 # input = np.array([[0],[1],[2],[3],[4],[5],[6],[7],[8],[9]])
 # setData = k_fold_cross_split(input, annotation, 10)
