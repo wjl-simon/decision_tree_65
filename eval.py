@@ -44,15 +44,18 @@ class Evaluator(object):
         """
         
         if not class_labels:
-            class_labels = np.unique(annotation)
-
-        #transfer the label of "A"-"Z" to "0"-"25"
-        prediction = [ ord(x)-65 for x in prediction ]
-        annotation = [ ord(x)-65 for x in annotation ]
+            class_labels = list(set(prediction.tolist()))
+            class_labels.sort(key=prediction.tolist().index)
+            #print(class_labels)
+                                    
+        #transfer to label index
+        prediction = [class_labels.index(x) for x in prediction]
+        annotation = [class_labels.index(x) for x in annotation]
         print(prediction)
         print(annotation)
        
         size=len(class_labels)
+      
         #initialize the confusion                        
         confusion = np.zeros((size,size), dtype=np.int)
         
@@ -60,7 +63,7 @@ class Evaluator(object):
         #######################################################################
         #                 ** TASK 3.1: COMPLETE THIS METHOD **
         #######################################################################
-        for i in range(max(len(prediction),len(annotation))):
+        for i in range(len(prediction)):
                     confusion[annotation[i]][prediction[i]]+=1
                                 
             
@@ -81,14 +84,12 @@ class Evaluator(object):
         float
             The accuracy (between 0.0 to 1.0 inclusive)
         """
-        
-        # feel free to remove this
-        accuracy = 0.0
-        
+ 
         #######################################################################
         #                 ** TASK 3.2: COMPLETE THIS METHOD **
         #######################################################################
 
+        accuracy=0.0
         length=confusion.shape[0]
         sum_all=0
         accuracy_sum=0.0
@@ -227,7 +228,7 @@ class Evaluator(object):
         r=self.recall(confusion)
         macro_f = 0
         sum_f=0.0
-        length=len(f)
+        length=len(confusion)
         
         for i in range(length):
             f[i]=2*(p[0][i]*r[0][i])/(p[0][i]+r[0][i])
@@ -238,4 +239,5 @@ class Evaluator(object):
         
         return (f, macro_f)
    
- 
+         
+  

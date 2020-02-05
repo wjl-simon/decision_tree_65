@@ -14,8 +14,8 @@ from print_tree import printDecisionTree
 # from prune import *
 
 def parseInputs(fname):
-    filename = "F:\\PG CS Study\\IntroToML\\cw\\decision_trees_65\\data\\" + fname
-    # filename = os.getcwd() + '//data//' + fname
+    filename = "//homes//xj19//decision_trees_65//data//" + fname
+    #filename = os.getcwd() + '//data//' + fname
     f = open (filename, 'r')
     line = f.readline()
     numArray = []
@@ -99,30 +99,32 @@ if __name__ == "__main__":
     print("======================")
     print("Predictions:\n {}".format(predictions))
     
-    # classes = ["A", "C"];
+    #classes = ["A", "C"];
+    classes = np.unique(y_test)
     
-    # print("Evaluating test predictions...")
-    # evaluator = Evaluator()
-    # confusion = evaluator.confusion_matrix(predictions, y_test)
+    print("Evaluating test predictions...")
+    evaluator = Evaluator()
+    confusion = evaluator.confusion_matrix(predictions, y_test)
     
-    # print("Confusion matrix:")
-    # print(confusion)
+    print("Confusion matrix:")
+    print("(Note:row classes-actual classes; column classes-predicted classes")
+    print(confusion)
 
-    # accuracy = evaluator.accuracy(confusion)
-    # print()
-    # print("Accuracy: {}".format(accuracy))
+    accuracy = evaluator.accuracy(confusion)
+    print()
+    print("Accuracy: {}".format(accuracy))
 
-    # (p, macro_p) = evaluator.precision(confusion)
-    # (r, macro_r) = evaluator.recall(confusion)
-    # (f, macro_f) = evaluator.f1_score(confusion)
+    (p, macro_p) = evaluator.precision(confusion)
+    (r, macro_r) = evaluator.recall(confusion)
+    (f, macro_f) = evaluator.f1_score(confusion)
 
-    # print()
-    # print("Class: Precision, Recall, F1")
-    # for (i, (p1, r1, f1)) in enumerate(zip(p, r, f)):
-    #     print("{}: {:.2f}, {:.2f}, {:.2f}".format(classes[i], p1, r1, f1));
+    print()
+    print("Class: Precision, Recall, F1")
+    for (i, (p1, r1, f1)) in enumerate(zip(p, r, f)):
+        print("{}: {:.2f}, {:.2f}, {:.2f}".format(classes[i], p1, r1, f1));
    
-    # print() 
-    # print("Macro-averaged Precision: {:.2f}".format(macro_p))
-    # print("Macro-averaged Recall: {:.2f}".format(macro_r))
-    # print("Macro-averaged F1: {:.2f}".format(macro_f))
+    print() 
+    print("Macro-averaged Precision: {:.2f}".format(macro_p))
+    print("Macro-averaged Recall: {:.2f}".format(macro_r))
+    print("Macro-averaged F1: {:.2f}".format(macro_f))
 
