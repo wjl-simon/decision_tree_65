@@ -30,8 +30,8 @@ def k_fold_cross_split(input, annotation, foldCount):
     testMin = 0
     testMax = 0 + testFoldSize - 1
     #list structure to store each fold
-    print(shuffledInput)
-    print(shuffledAnnotation)
+    # print(shuffledInput)
+    # print(shuffledAnnotation)
     setTest = []
     setLabel = []
     # print("test fold size: " + str(testFoldSize))
@@ -74,10 +74,10 @@ def k_fold_cross_models(setData, foldCount, numberOfEntries):
     # print(setData[0])
     # print(setData[1])
     testInput, testAnnotation = example_main.parseInputs("test.txt")
-    print("test txt input")
-    print(testInput)
-    print("test txt output")
-    print(testAnnotation)
+    # print("test txt input")
+    # print(testInput)
+    # print("test txt output")
+    # print(testAnnotation)
     TotalAnnotationNumpy = np.hstack(setData[1])
     TotalDataNumpy = np.vstack(setData[0])
     # print("total data: ")
@@ -92,6 +92,7 @@ def k_fold_cross_models(setData, foldCount, numberOfEntries):
     predictionList = []
     for foldIterator in range(foldCount):
         print("======================")
+        print("Model " + str(foldIterator) + " training. ")
         if (foldIterator + 1) >= (foldCount):
             testMax = numberOfEntries - 1
         else:
@@ -99,11 +100,11 @@ def k_fold_cross_models(setData, foldCount, numberOfEntries):
             # print("normal increment for test: " + str (numberOfEntries//foldCount))
         testSet = TotalDataNumpy[testMin:testMax+1, :]
         testAnnotation = TotalAnnotationNumpy[testMin:testMax+1,]
-        print("Test Min: " + str(testMin) + "Test Max:" + str(testMax))
-        print("test set: ")
-        print(testSet)
-        print("test annotation: ")
-        print(testAnnotation)
+        # print("Test Min: " + str(testMin) + "Test Max:" + str(testMax))
+        # print("test set: ")
+        # print(testSet)
+        # print("test annotation: ")
+        # print(testAnnotation)
         #at start:
         # print("validation min: " + str(validationMin) + "validation max: " + str(validationMax))
         # print("validation set: ")
