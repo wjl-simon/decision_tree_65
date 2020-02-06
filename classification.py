@@ -130,6 +130,7 @@ class DecisionTreeClassifier(object):
     def __findBestNode(self,X, Y):
     # Find the best rule that gives highest information gain to split the 
     # traning set
+    # Returns the best node and the best split as well
     # @X, Y: training set
 
         maxInfoGain = 0
@@ -146,6 +147,8 @@ class DecisionTreeClassifier(object):
             # looking for a good split point
             LEN = np.size(Y) - 1
             for j in range(LEN):
+                # consider only split points that are between two examples
+                # in sorted order that have different class labels
                 if dataset[j][1] == dataset[j+1][1] or \
                     dataset[j][0] == dataset[j+1][0]:
                     continue

@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     # y = np.array(["A", "A", "A", "C", "C", "C"])
 
-    x, y = parseInputs("train_noisy.txt")
+    x, y = parseInputs("train_sub.txt")
 
     print("Training the decision tree...")
     classifier = DecisionTreeClassifier()
