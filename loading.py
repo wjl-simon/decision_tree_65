@@ -2,9 +2,10 @@ import numpy as np
 import os
 
 def parseInputs(fname):
-    filename = "F:\\PG CS Study\\IntroToML\\cw\\decision_trees_65\\data\\" + fname
+    pwd = os.path.dirname(os.path.realpath(__file__))
+    filepath = pwd + '/data/' + fname
     # filename = os.getcwd() + '//data//' + fname
-    f = open (filename, 'r')
+    f = open (filepath, 'r')
     line = f.readline()
     numArray = []
     charArray =[]

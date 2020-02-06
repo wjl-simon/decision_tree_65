@@ -69,16 +69,16 @@ class Node:
     
 
     
-    def removeChild(self):
-    # remove children
-        assert self.isLeafNode == False and self.true_branch != None and\
-                self.false_branch != None,\
-                 "The children of a node must be both non-None."
+    # def removeChild(self):
+    # # remove children
+    #     assert self.isLeafNode == False and self.true_branch != None and\
+    #             self.false_branch != None,\
+    #              "The children of a node must be both non-None."
 
-        del self.true_branch
-        del self.false_branch
-        self.true_branch = None
-        self.false_branch = None
+    #     del self.true_branch
+    #     del self.false_branch
+    #     self.true_branch = None
+    #     self.false_branch = None
 
 
    

@@ -8,7 +8,6 @@ from node import Node
 from classification import DecisionTreeClassifier
 from eval import Evaluator
 import copy
-#import math
 
 
 def pruneLeaf(node):
@@ -128,6 +127,8 @@ def pruneModel(classifier,x_vali, y_vali):
                 undoPruneLeaf(node,saved_feature, \
                     saved_threshold, true_child, false_child)
             else:
+                del true_child
+                del false_child
                 acc_cur = acc_next
     
     print('The final pruned model has an accuracy \
@@ -212,6 +213,8 @@ def pruneSpecifiable(classifier,x_vali, y_vali,acc_improvement = 0.05, maxdep = 
                 undoPruneLeaf(node,saved_feature,saved_threshold, \
                     true_child,false_child)
             else:
+                del true_child
+                del false_child
                 acc_cur = acc_next
     
     print('After {0:d} steps, the final pruned model has an accuracy \

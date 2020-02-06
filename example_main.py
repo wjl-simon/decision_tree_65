@@ -5,13 +5,12 @@
 ##############################################################################
 
 import numpy as np
-#import os
 import pickle # for saving the model
 
 from classification import DecisionTreeClassifier
 from eval import Evaluator
 from print_tree import printDecisionTree
-from loading import * # the parseInput is here
+from loading import parseInputs # the parseInput is here
 from prune import pruneModel, pruneSpecifiable # the pruning function
 import copy
 
@@ -30,16 +29,16 @@ if __name__ == "__main__":
 
     # y = np.array(["A", "A", "A", "C", "C", "C"])
 
-    # x, y = parseInputs("train_sub.txt")
+    # x, y = parseInputs("train_noisy.txt")
 
     # print("Training the decision tree...")
     # classifier = DecisionTreeClassifier()
-    # classifier.train(x,y)
+    # classifier = classifier.train(x,y)
 
     # # save the trained model
     # print("========================")
     # print("Training finished. Saving the model...")
-    # file = open("model_with_train_sub", "wb")
+    # file = open("model_with_train_noisy", "wb")
     # pickle.dump(classifier, file)
     # file.close()
     # print("========================")
@@ -47,12 +46,10 @@ if __name__ == "__main__":
     # load the saved trained model
     print("========================")
     print("Loding the saved model...")
-    classifier = pickle.load(open("model_with_train_sub", "rb"))
-    # classifier = pickle.load(open("model_with_train_full", "rb"))
+    classifier = pickle.load(open("model_with_train_noisy", "rb"))
     print("Loding finished.")
     print("========================")
 
-    print("========================")
     print("Priting the decision tree...")
     printDecisionTree(classifier.model)
     print("========================")
@@ -105,15 +102,22 @@ if __name__ == "__main__":
     print("Macro-averaged Recall: {:.2f}".format(macro_r))
     print("Macro-averaged F1: {:.2f}".format(macro_f))
 
-    print("======================")
-    print('Pruning the decision tree...')
-    classifier_copy = copy.deepcopy(classifier)
-    pruneModel(classifier_copy,x_test,y_test)
-    print('Pruning finished. Printing the decision tree...')
-    printDecisionTree(classifier_copy.model)
-    print("======================")
-    print('Pruning the decision tree using method2...')
-    classifier2 = copy.deepcopy(classifier)
-    pruneSpecifiable(classifier2,x_test,y_test)
-    print('Pruning finished. Printing the decision tree...')
-    printDecisionTree(classifier2.model)
+
+    # print("======================")
+    # print("Loading the validation set...")
+    # x_vali, y_vali = parseInputs("validation.txt")
+    # print("Loading the validation set finished.")
+
+    # print("======================")
+    # print('Pruning the decision tree...')
+    # classifier_copy = copy.deepcopy(classifier)
+    # pruneModel(classifier_copy,x_vali,y_vali)
+    # print('Pruning finished. Printing the decision tree...')
+    # printDecisionTree(classifier_copy.model)
+
+    # print("======================")
+    # print('Pruning the decision tree using method2...')
+    # classifier2 = copy.deepcopy(classifier)
+    # pruneSpecifiable(classifier2,x_vali,y_vali)
+    # print('Pruning finished. Printing the decision tree...')
+    # printDecisionTree(classifier2.model)
