@@ -8,6 +8,7 @@ from node import Node
 from classification import DecisionTreeClassifier
 from eval import Evaluator
 import copy
+import math
 
 
 def pruneLeaf(node):
@@ -87,6 +88,7 @@ def undoPruneLeaf(node,saved_feature,saved_threshold, \
     node.leftover_stat = None
 
 
+
 def pruneModel(classifier,x_vali, y_vali):
     '''
         Iteratively prune the decision tree model, unspecifiable
@@ -134,39 +136,14 @@ def pruneModel(classifier,x_vali, y_vali):
     print('The final pruned model has an accuracy \
         of: {a}'.format(a=acc_cur))
     
+    return acc_cur
 
 
 
 #################################
 # Althernative way to do pruning
 #################################
-def findPrunable(node):
-    '''
-        Returns a list of the prunable nodes
-        
-        @node: the root node of the decision tree
-    '''
-    childrenStack = [node]
-    prunable = []
-
-    while childrenStack: # nonempty statck
-        cur = childrenStack.pop()
-
-        if not cur.false_branch.isLeafNode:
-            childrenStack.append(cur.false_branch)
-        if not cur.true_branch.isLeafNode:
-            childrenStack.append(cur.true_branch)
-        
-        # saving the leaves
-        if cur.true_branch.isLeafNode and \
-            cur.false_branch.isLeafNode:
-            prunable.append(cur)
-    
-    return prunable
-
-
-
-def pruneSpecifiable(classifier,x_vali, y_vali,acc_improvement = 0.05, maxdep = 5):
+def pruneSpecifiable(classifier,x_vali, y_vali,acc_improvement = 0.05, maxdep = 6):
     '''
         Gives a pruned version of the decision tree
         
@@ -192,30 +169,16 @@ def pruneSpecifiable(classifier,x_vali, y_vali,acc_improvement = 0.05, maxdep = 
 
     # iteration: stops if there is a root node left, or converges, or
     # reaches max ite steps
-    acc_cur = acc_next = original_accuracy
+    acc_next = original_accuracy
+    acc_cur = 0
     counter = 0
-    while counter < maxdep and \
-        1 - (acc_cur/original_accuracy) < acc_improvement:
+    while counter < maxdep and math.fabs(acc_next - acc_cur) >= 0.01 and \
+        1 - (acc_next/original_accuracy) < acc_improvement:
         # update
+        acc_cur = acc_next
         counter += 1
-        # get prunable the leaves
-        prunable = findPrunable(classifier.model)
-        # pruning
-        for node in prunable:
-            saved_feature, saved_threshold, true_child, false_child = \
-                pruneLeaf(node)
-            # compute the accuracy
-            conf = evaluator.confusion_matrix( \
-                classifier.predict(x_vali),y_vali)
-            acc_next = evaluator.accuracy(conf)
-            # undo if gives worse accuracy
-            if acc_next < acc_cur:
-                undoPruneLeaf(node,saved_feature,saved_threshold, \
-                    true_child,false_child)
-            else:
-                del true_child
-                del false_child
-                acc_cur = acc_next
+        # commit one prunning
+        acc_next = pruneModel(classifier,x_vali,y_vali)
     
     print('After {0:d} steps, the final pruned model has an accuracy \
-        of: {a}'.format(counter,a=acc_cur))
+        of: {a}'.format(counter,a=acc_next))

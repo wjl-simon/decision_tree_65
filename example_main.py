@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     # y = np.array(["A", "A", "A", "C", "C", "C"])
 
-    x, y = parseInputs("train_sub.txt")
+    x, y = parseInputs("train_full.txt")
 
     print("Training the decision tree...")
     classifier = DecisionTreeClassifier()
@@ -103,24 +103,25 @@ if __name__ == "__main__":
     print("Macro-averaged Recall: {:.2f}".format(macro_r))
     print("Macro-averaged F1: {:.2f}".format(macro_f))
 
-
-    # print("======================")
-    # print("Loading the validation set...")
-    # x_vali, y_vali = parseInputs("validation.txt")
-    # print("Loading the validation set finished.")
-
-    # print("======================")
-    # print('Pruning the decision tree...')
-    # classifier_copy = copy.deepcopy(classifier)
-    # pruneModel(classifier_copy,x_vali,y_vali)
-    # print('Pruning finished. Printing the decision tree...')
-    # printDecisionTree(classifier_copy.model)
-
-    # print("======================")
-    # print('Pruning the decision tree using method2...')
-    # classifier2 = copy.deepcopy(classifier)
-    # pruneSpecifiable(classifier2,x_vali,y_vali)
-    # print('Pruning finished. Printing the decision tree...')
-    # printDecisionTree(classifier2.model)
-
     print("--- %s seconds ---" % (time.time() - start_time))
+
+    print("======================")
+    print("Loading the validation set...")
+    x_vali, y_vali = parseInputs("validation.txt")
+    print("Loading the validation set finished.")
+
+    print("======================")
+    print('Pruning the decision tree...')
+    classifier_copy = copy.deepcopy(classifier)
+    pruneModel(classifier_copy,x_vali,y_vali)
+    print('Pruning finished. Printing the decision tree...')
+    printDecisionTree(classifier_copy.model)
+
+    print("======================")
+    print('Pruning the decision tree using method2...')
+    classifier2 = copy.deepcopy(classifier)
+    pruneSpecifiable(classifier2,x_vali,y_vali)
+    print('Pruning finished. Printing the decision tree...')
+    printDecisionTree(classifier2.model)
+
+   
