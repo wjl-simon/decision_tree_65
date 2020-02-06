@@ -247,7 +247,7 @@ class DecisionTreeClassifier(object):
             return self
 
         # the model has the root node
-        self.model = self.__induceDecisionTree(x,y)
+        # self.model = self.__induceDecisionTree(x,y)
         
         # set a flag so that we know that the classifier has been trained
         self.is_trained = True

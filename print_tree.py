@@ -1,9 +1,9 @@
 from classification import Node
 
 
-def printDecisionTree(node, spacing="|", depth = 0):
+def printDecisionTree(node, spacing="|", depth = 0, maxDep = 4):
     # base case 1: reaches the max recursion depth
-    if depth > 4:
+    if depth > maxDep:
         print (spacing + '==* ...')
         return
 
