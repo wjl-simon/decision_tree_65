@@ -67,34 +67,14 @@ class DecisionTreeClassifier(object):
     # the key for the list.sort() method
     def __sort_key(self,e):
         return e[0]
-
-    def __giveCandidateThreshold(self,feature_vec, labels):
-    # find the feature values that are between two examples in sorted
-    # order that have different class labels
-    # @feature_vec: the vecture vector (a training set concerning one feature
-    # only)
-    # @labels: label set
     
-        # concatenate the feature vector and the labels into a 2-D "dataset"
-        dataset = list(zip(feature_vec.tolist(),labels.tolist()))
-        # sort the dataset according to the val of the features
-        dataset.sort(key = self.__sort_key)
-
-        LEN = np.size(feature_vec)
-        candidates = []
-        for i in range(LEN - 1):
-            if dataset[i][1] != dataset[i+1][1]:
-                candidates.append(dataset[i][0])
-        
-        candidates.append(dataset[-1][0]) # the max value for this feature
-        
-        return candidates
-
 
     def __sortAccorToFeatureVal(self,feature_vec, labels):
     # Return a 2D list, where the 1st column is the value of the feature 
     # (attribute), the 2nd col is the corrspodning label. The 2D list is 
     # sorted according to the feature value.
+    # This function basically is uesed for narrow down the and find a good
+    # spilt point
     #
     # @feature_vec: the vecture vector (a training set concerning one feature
     # only)
@@ -154,17 +134,16 @@ class DecisionTreeClassifier(object):
 
         maxInfoGain = 0
         best_node = None
-        best_pos_X, best_pos_Y, best_neg_X, best_neg_Y = [],[],[],[] # best split
+        # best split
+        best_pos_X, best_pos_Y, best_neg_X, best_neg_Y = [],[],[],[]
         parent_entpy = self.__entropy(Y) # entropy of the parent node
         K = X.shape[1]  # num of features
 
         for i in range(K):
-            # candidates for the threshold
-            # candidates = self.__giveCandidateThreshold(X[:,i],Y)
-
-
             # sort the feature value
             dataset = self.__sortAccorToFeatureVal(X[:,i],Y)
+
+            # looking for a good split point
             LEN = np.size(Y) - 1
             for j in range(LEN):
                 if dataset[j][1] == dataset[j+1][1] or \
