@@ -55,10 +55,10 @@ class DecisionTreeClassifier(object):
                 neg_Y.append(Y[counter])
             counter += 1
 
-        pos_X = np.asarray(pos_X)
-        pos_Y = np.asarray(pos_Y)
-        neg_X = np.asarray(neg_X)
-        neg_Y = np.asarray(neg_Y)
+        # pos_X = np.asarray(pos_X)
+        # pos_Y = np.asarray(pos_Y)
+        # neg_X = np.asarray(neg_X)
+        # neg_Y = np.asarray(neg_Y)
 
         return pos_X, pos_Y, neg_X, neg_Y
     
@@ -89,6 +89,23 @@ class DecisionTreeClassifier(object):
         candidates.append(dataset[-1][0]) # the max value for this feature
         
         return candidates
+
+
+    def __sortAccorToFeatureVal(self,feature_vec, labels):
+    # Return a 2D list, where the 1st column is the value of the feature 
+    # (attribute), the 2nd col is the corrspodning label. The 2D list is 
+    # sorted according to the feature value.
+    #
+    # @feature_vec: the vecture vector (a training set concerning one feature
+    # only)
+    # @labels: label set
+    
+        # concatenate the feature vector and the labels into a 2-D "dataset"
+        dataset = list(zip(feature_vec.tolist(),labels.tolist()))
+        # sort the dataset according to the val of the features
+        dataset.sort(key = self.__sort_key)
+        
+        return dataset
 
     
 
@@ -134,21 +151,28 @@ class DecisionTreeClassifier(object):
     # Find the best rule that gives highest information gain to split the 
     # traning set
     # @X, Y: training set
-    
+
         maxInfoGain = 0
-        best_node = None 
+        best_node = None
+        best_pos_X, best_pos_Y, best_neg_X, best_neg_Y = [],[],[],[] # best split
         parent_entpy = self.__entropy(Y) # entropy of the parent node
-        #N = X.shape[0]  # num of examples
         K = X.shape[1]  # num of features
 
         for i in range(K):
             # candidates for the threshold
-            candidates = self.__giveCandidateThreshold(X[:,i],Y)
+            # candidates = self.__giveCandidateThreshold(X[:,i],Y)
 
-            # for val in featureDomain:
-            for val in candidates:
+
+            # sort the feature value
+            dataset = self.__sortAccorToFeatureVal(X[:,i],Y)
+            LEN = np.size(Y) - 1
+            for j in range(LEN):
+                if dataset[j][1] == dataset[j+1][1] or \
+                    dataset[j][0] == dataset[j+1][0]:
+                    continue
+
                 # a candidate node with for spiltting the training set 
-                node = Node(i,val)
+                node = Node(i,dataset[j][0])
 
                 # splitting
                 pos_X, pos_Y, neg_X, neg_Y = \
@@ -164,8 +188,18 @@ class DecisionTreeClassifier(object):
                 if infoGain > maxInfoGain:
                     maxInfoGain = infoGain
                     best_node = node
+                    best_pos_X = pos_X
+                    best_pos_Y = pos_Y
+                    best_neg_X = neg_X
+                    best_neg_Y = neg_Y
+        
+        best_pos_X = np.asarray(best_pos_X)
+        best_pos_Y = np.asarray(best_pos_Y)
+        best_neg_X = np.asarray(best_neg_X)
+        best_neg_Y = np.asarray(best_neg_Y)
 
-        return best_node
+        return best_pos_X, best_pos_Y, best_neg_X, best_neg_Y, \
+            best_node
 
 
 
@@ -174,7 +208,7 @@ class DecisionTreeClassifier(object):
     # @X,Y: training set
 
         # generate a node
-        node = self.__findBestNode(X,Y)
+        pos_X, pos_Y, neg_X, neg_Y, node = self.__findBestNode(X,Y)
 
         # Base case: if cannot split further or there is only one class,
         # return a leaf node with the majority label
@@ -192,7 +226,7 @@ class DecisionTreeClassifier(object):
 
 
         # default case: spilt
-        pos_X, pos_Y, neg_X, neg_Y = self.__splitDataSet(X,Y,node)
+        # pos_X, pos_Y, neg_X, neg_Y = self.__splitDataSet(X,Y,node)
 
         # Recursion
         true_branch = self.__induceDecisionTree(pos_X, pos_Y)
@@ -247,7 +281,7 @@ class DecisionTreeClassifier(object):
             return self
 
         # the model has the root node
-        # self.model = self.__induceDecisionTree(x,y)
+        self.model = self.__induceDecisionTree(x,y)
         
         # set a flag so that we know that the classifier has been trained
         self.is_trained = True

@@ -14,7 +14,8 @@ from loading import parseInputs # the parseInput is here
 from prune import pruneModel, pruneSpecifiable # the pruning function
 import copy
 
-
+import time
+start_time = time.time()
 
 if __name__ == "__main__":
     print("Loading the training dataset...")
@@ -29,11 +30,11 @@ if __name__ == "__main__":
 
     # y = np.array(["A", "A", "A", "C", "C", "C"])
 
-    # x, y = parseInputs("train_noisy.txt")
+    x, y = parseInputs("train_noisy.txt")
 
-    # print("Training the decision tree...")
-    # classifier = DecisionTreeClassifier()
-    # classifier = classifier.train(x,y)
+    print("Training the decision tree...")
+    classifier = DecisionTreeClassifier()
+    classifier = classifier.train(x,y)
 
     # # save the trained model
     # print("========================")
@@ -43,12 +44,12 @@ if __name__ == "__main__":
     # file.close()
     # print("========================")
 
-    # load the saved trained model
-    print("========================")
-    print("Loding the saved model...")
-    classifier = pickle.load(open("model_with_train_noisy", "rb"))
-    print("Loding finished.")
-    print("========================")
+    # # load the saved trained model
+    # print("========================")
+    # print("Loding the saved model...")
+    # classifier = pickle.load(open("model_with_train_noisy", "rb"))
+    # print("Loding finished.")
+    # print("========================")
 
     print("Priting the decision tree...")
     printDecisionTree(classifier.model)
@@ -121,3 +122,5 @@ if __name__ == "__main__":
     # pruneSpecifiable(classifier2,x_vali,y_vali)
     # print('Pruning finished. Printing the decision tree...')
     # printDecisionTree(classifier2.model)
+
+    print("--- %s seconds ---" % (time.time() - start_time))
